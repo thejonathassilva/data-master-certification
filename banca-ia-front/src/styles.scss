@@ -1,0 +1,91 @@
+/* src/styles.scss */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+/* Paletas */
+$primary: mat.define-palette(mat.$indigo-palette, 500, 300, 700);
+$accent:  mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$warn:    mat.define-palette(mat.$red-palette);
+
+/* Tipografia compatível com v14 */
+$typography: mat.define-typography-config(
+  $font-family: 'Roboto, Helvetica, Arial, sans-serif',
+  $headline:  mat.define-typography-level(24px, 32px, 600),
+  $body-1:    mat.define-typography-level(14px, 20px, 400)
+);
+
+/* Temas */
+$light-theme: mat.define-light-theme((
+  color: (primary: $primary, accent: $accent, warn: $warn),
+  typography: $typography,
+  density: 0
+));
+
+$dark-theme: mat.define-dark-theme((
+  color: (primary: $primary, accent: $accent, warn: $warn),
+  typography: $typography,
+  density: 0
+));
+
+.theme-light { @include mat.all-component-themes($light-theme); background:#fafafa; color:#111; }
+.theme-dark  { @include mat.all-component-themes($dark-theme);  background:#121212; color:#eee; }
+
+.theme-dark .chat .bubble,
+.theme-dark .chat .bubble * {
+  color: #111 !important; /* força texto escuro dentro do balão */
+}
+
+.controls{ display:flex; gap:16px; align-items:flex-end; }
+.controls .engine-chooser{ margin-left:auto; min-width:220px; }
+
+html, body { height:100%; } body { margin:0; }
+.container { padding:16px; }
+
+/* --- Wrapper amplo sem overflow horizontal --- */
+.page--wide {
+  inline-size: 100%;          /* = width */
+  max-inline-size: 100%;      /* nunca passa da viewport */
+  margin: 0 auto;
+  padding: 16px 24px;
+  box-sizing: border-box;     /* padding conta dentro da largura */
+  overflow-x: hidden;         /* nada vaza para fora do wrapper */
+}
+
+/* --- Tabelas dentro do wrapper ocupam 100% e, se necessário, rolam por dentro --- */
+.page--wide > table,
+.page--wide > .mat-table {
+  display: block;                 /* permite aplicar overflow */
+  max-inline-size: 100%;
+  overflow-x: auto;               /* scroll interno só quando precisar */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Distribuição e quebra saudáveis (sem estourar) */
+.page--wide table {
+  width: 100%;
+  table-layout: fixed;            /* colunas se ajustam */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.page--wide table th,
+.page--wide table td {
+  padding: 14px 16px;
+  min-width: 0;
+  word-break: break-word;         /* evita strings longas estourarem */
+}
+
+/* A última coluna (ações) não cresce demais */
+.page--wide table thead th:last-child,
+.page--wide table tbody td:last-child {
+  white-space: nowrap;
+  text-align: right;
+  width: 1%;
+}
+
+/* (opcional) blindagem global contra 0.5px de overflow em alguns zooms */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+

@@ -1,0 +1,1 @@
+export const API_BASE = (window as any).__API__ ?? 'http://localhost:8080/api';

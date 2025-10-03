@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Prévia da intenção: {{ data.draftName }}</h2>
+
+<mat-dialog-content>
+  <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:12px">
+    <div>
+      <div style="font-size:12px; opacity:.7">F1 antes</div>
+      <div style="font-size:24px">{{ data.result.deltaMetrics.intent_f1_before | number:'1.2-2' }}</div>
+    </div>
+    <div>
+      <div style="font-size:12px; opacity:.7">F1 depois</div>
+      <div style="font-size:24px">{{ data.result.deltaMetrics.intent_f1_after | number:'1.2-2' }}</div>
+    </div>
+    <div>
+      <div style="font-size:12px; opacity:.7">Δ (ganho)</div>
+      <div style="font-size:24px">
+        {{ (data.result.deltaMetrics.intent_f1_after - data.result.deltaMetrics.intent_f1_before) | number:'1.2-2' }}
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin:8px 0 4px">Confiança por exemplo</h3>
+  <mat-list dense>
+    <mat-list-item *ngFor="let s of data.result.sampleConfidence">
+      <div matListItemTitle>{{ s.text }}</div>
+      <div matListItemLine>conf: {{ s.confidence | number:'1.2-2' }} <span *ngIf="s.predictedIntent">• {{ s.predictedIntent }}</span></div>
+    </mat-list-item>
+  </mat-list>
+
+  <h3 style="margin:12px 0 4px" *ngIf="data.result.topConfusions?.length">Top confusões</h3>
+  <mat-list dense *ngIf="data.result.topConfusions?.length">
+    <mat-list-item *ngFor="let c of data.result.topConfusions">
+      <div matListItemTitle>{{ c[0] }} → {{ c[1] }}</div>
+      <div matListItemLine>{{ c[2] }} ocorrências</div>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">Fechar</button>
+</mat-dialog-actions>

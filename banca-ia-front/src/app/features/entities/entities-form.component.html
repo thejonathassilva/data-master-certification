@@ -1,0 +1,66 @@
+<div class="page--wide">
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
+    <div class="section-title">Entidade</div>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Assunto</mat-label>
+        <mat-select formControlName="subjectId" required>
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{ s.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome da Entidade</mat-label>
+        <input matInput formControlName="name" required />
+      </mat-form-field>
+    </div>
+
+    <mat-divider style="margin:16px 0"></mat-divider>
+
+    <div class="section-title">Regex (um por linha — agora um por campo)</div>
+    <div formArrayName="patterns" class="form-grid">
+      <div class="field-full" *ngFor="let ctrl of patternsFA.controls; let i = index" style="display:flex; gap:8px">
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-label>Regex {{ i + 1 }}</mat-label>
+          <input matInput [formControlName]="i" placeholder="Ex.: \\b\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}\\b" />
+        </mat-form-field>
+        <button mat-icon-button color="primary" type="button" (click)="addPattern(i)" matTooltip="Adicionar regex">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" type="button" (click)="removePattern(i)" [disabled]="patternsFA.length<=1" matTooltip="Remover">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button mat-stroked-button color="primary" type="button" (click)="addPattern()">Adicionar regex</button>
+      </div>
+    </div>
+
+    <mat-divider style="margin:16px 0"></mat-divider>
+
+    <div class="section-title">Gazetteer (um termo por campo)</div>
+    <div formArrayName="gazetteer" class="form-grid">
+      <div class="field-full" *ngFor="let ctrl of gazetteerFA.controls; let i = index" style="display:flex; gap:8px">
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-label>Termo {{ i + 1 }}</mat-label>
+          <input matInput [formControlName]="i" placeholder="Ex.: ABC1D23" />
+        </mat-form-field>
+        <button mat-icon-button color="primary" type="button" (click)="addGaz(i)" matTooltip="Adicionar termo">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" type="button" (click)="removeGaz(i)" [disabled]="gazetteerFA.length<=1" matTooltip="Remover">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div>
+        <button mat-stroked-button color="primary" type="button" (click)="addGaz()">Adicionar termo</button>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit">Salvar</button>
+      <a mat-button routerLink="/entities">Cancelar</a>
+    </div>
+  </form>
+</div>

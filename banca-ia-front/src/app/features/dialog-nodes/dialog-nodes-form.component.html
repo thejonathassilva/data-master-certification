@@ -1,0 +1,80 @@
+<div class="page--wide">
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-card">
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Assunto</mat-label>
+        <mat-select formControlName="subjectId" required>
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{ s.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de condição</mat-label>
+        <mat-select formControlName="conditionType">
+          <mat-option value="intent">intent</mat-option>
+          <mat-option value="expr">expr</mat-option>
+          <mat-option value="true">true</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" *ngIf="form.value.conditionType !== 'true'">
+        <mat-label>Valor da condição</mat-label>
+        <input matInput formControlName="conditionValue" placeholder="Ex.: ID da intent">
+      </mat-form-field>
+
+      <mat-form-field class="field-full" appearance="outline">
+        <mat-label>Resposta (texto)</mat-label>
+        <textarea matInput formControlName="responseText" rows="3"></textarea>
+      </mat-form-field>
+    </div>
+
+    <mat-divider style="margin:16px 0"></mat-divider>
+
+    <div class="section-title">Ações</div>
+    <div formArrayName="responseActions" class="form-grid">
+      <div class="field-full" *ngFor="let ctrl of actionsFA.controls; let i = index" style="display:flex; gap:8px">
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-label>Ação {{ i + 1 }}</mat-label>
+          <input matInput [formControlName]="i" placeholder="ex.: OPEN_TICKET, NOTIFY_BACKOFFICE">
+        </mat-form-field>
+        <button mat-icon-button color="primary" type="button" (click)="addAction(i)" matTooltip="Adicionar ação">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" type="button" (click)="removeAction(i)" [disabled]="actionsFA.length<=1" matTooltip="Remover">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div><button mat-stroked-button color="primary" type="button" (click)="addAction()">Adicionar ação</button></div>
+    </div>
+
+    <mat-divider style="margin:16px 0"></mat-divider>
+
+    <div class="section-title">Filhos</div>
+    <div formArrayName="children" class="form-grid">
+      <div class="field-full" *ngFor="let ctrl of childrenFA.controls; let i = index" style="display:flex; gap:8px">
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-label>Filho {{ i + 1 }} (ID do nó)</mat-label>
+          <input matInput [formControlName]="i" placeholder="ex.: NODE_123">
+        </mat-form-field>
+        <button mat-icon-button color="primary" type="button" (click)="addChild(i)" matTooltip="Adicionar filho">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" type="button" (click)="removeChild(i)" [disabled]="childrenFA.length<=1" matTooltip="Remover">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div><button mat-stroked-button color="primary" type="button" (click)="addChild()">Adicionar filho</button></div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit">Salvar</button>
+      <a mat-button routerLink="/dialog-nodes">Cancelar</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,17 @@
+<div class="page--wide">
+  <div class="toolbar">
+    <a mat-raised-button color="primary" routerLink="new">Nova Entidade</a>
+  </div>
+  <table mat-table [dataSource]="data" class="mat-elevation-z1">
+    <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Nome</th><td mat-cell *matCellDef="let e">{{e.name}}</td></ng-container>
+    <ng-container matColumnDef="subjectId"><th mat-header-cell *matHeaderCellDef>Assunto</th><td mat-cell *matCellDef="let e">{{sName(e.subjectId)}}</td></ng-container>
+    <ng-container matColumnDef="patterns"><th mat-header-cell *matHeaderCellDef>Regex</th><td mat-cell *matCellDef="let e">{{e.patterns?.length||0}}</td></ng-container>
+    <ng-container matColumnDef="gazetteer"><th mat-header-cell *matHeaderCellDef>Gazetteer</th><td mat-cell *matCellDef="let e">{{e.gazetteer?.length||0}}</td></ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let e"><a mat-button color="primary" [routerLink]="[e.id]">Editar</a><button mat-button color="warn" (click)="remove(e.id)">Excluir</button></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

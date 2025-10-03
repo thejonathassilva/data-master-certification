@@ -1,0 +1,39 @@
+<div class="controls">
+  <mat-form-field>
+    <mat-label>Canal</mat-label>
+    <mat-select [formControl]="form.controls['channel']">
+      <mat-option *ngFor="let c of channels" [value]="c">{{ c }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- novo seletor de IA; fica alinhado à direita -->
+  <mat-form-field class="engine-chooser">
+    <mat-label>IA</mat-label>
+    <mat-select [formControl]="form.controls['engine']">
+      <mat-option value="spacy-IA">J_Spac_IA</mat-option>
+      <mat-option value="stick-IA">J_Assistant</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- resto do seu HTML permanece igual -->
+<div class="chat">
+  <div *ngFor="let m of history" class="bubble" [ngClass]="m.role">
+    <div>{{ m.text }}</div>
+    <div *ngIf="m.meta" class="meta" style="font-size:12px;opacity:.85;margin-top:6px">
+      <b>Intent:</b> {{m.meta.intentId}} •
+      <b>Conf:</b> {{m.meta.confidence | number:'1.2-2'}}
+      <mat-chip-list *ngIf="m.meta.entities?.length" aria-label="Entidades extraídas">
+        <mat-chip *ngFor="let e of m.meta.entities">{{ e.label }}: {{ e.value }}</mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="send()" style="display:flex; gap:10px; margin-top:12px">
+  <input class="mat-input-element mat-mdc-input-element"
+         placeholder="Digite a mensagem..."
+         formControlName="text"
+         style="flex:1; padding:12px; border:1px solid #ddd; border-radius:10px">
+  <button mat-raised-button color="primary">Enviar</button>
+</form>

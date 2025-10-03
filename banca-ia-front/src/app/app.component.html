@@ -1,0 +1,19 @@
+<!-- src/app/app.component.html -->
+<mat-toolbar color="primary">
+  <span>Jhonnia • Assistente virtual</span>
+  <span style="flex:1 1 auto"></span>
+  <app-theme-toggle></app-theme-toggle>
+</mat-toolbar>
+
+<nav mat-tab-nav-bar class="top-tabs">
+  <a mat-tab-link routerLink="/simulate" routerLinkActive #r1="routerLinkActive" [active]="r1.isActive">Simulador</a>
+  <a mat-tab-link routerLink="/channels" routerLinkActive #r2="routerLinkActive" [active]="r2.isActive">Canais</a>
+  <a mat-tab-link routerLink="/subjects" routerLinkActive #r3="routerLinkActive" [active]="r3.isActive">Assuntos</a>
+  <a mat-tab-link routerLink="/intents" routerLinkActive #r4="routerLinkActive" [active]="r4.isActive">Intenções</a>
+  <a mat-tab-link routerLink="/entities" routerLinkActive #r5="routerLinkActive" [active]="r5.isActive">Entidades</a>
+  <a mat-tab-link routerLink="/dialog-nodes" routerLinkActive #r6="routerLinkActive" [active]="r6.isActive">Nós</a>
+</nav>
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>

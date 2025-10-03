@@ -1,0 +1,24 @@
+<div class="page--wide">
+  <div class="toolbar">
+    <a mat-raised-button color="primary" routerLink="new">Novo Canal</a>
+  </div>
+  <table mat-table [dataSource]="data" class="mat-elevation-z1">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let c">{{c.name}}</td>
+    </ng-container>
+    <ng-container matColumnDef="minConfSubject">
+      <th mat-header-cell *matHeaderCellDef>Min Conf. Assunto</th>
+      <td mat-cell *matCellDef="let c">{{c.minConfSubject}}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let c">
+        <a mat-button color="primary" [routerLink]="[c.id]">Editar</a>
+        <button mat-button color="warn" (click)="remove(c.id)">Excluir</button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

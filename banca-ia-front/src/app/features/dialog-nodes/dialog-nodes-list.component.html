@@ -1,0 +1,18 @@
+<div class="page--wide">
+  <div class="toolbar">
+    <a mat-raised-button color="primary" routerLink="new">Novo Nó</a>
+  </div>
+  <table mat-table [dataSource]="data" class="mat-elevation-z1">
+    <ng-container matColumnDef="name"><th mat-header-cell *matHeaderCellDef>Nome</th><td mat-cell *matCellDef="let n">{{n.name}}</td></ng-container>
+    <ng-container matColumnDef="subjectId"><th mat-header-cell *matHeaderCellDef>Assunto</th><td mat-cell *matCellDef="let n">{{sName(n.subjectId)}}</td></ng-container>
+    <ng-container matColumnDef="condition"><th mat-header-cell *matHeaderCellDef>Condição</th><td mat-cell *matCellDef="let n">{{n.conditionType}}: {{n.conditionValue}}</td></ng-container>
+    <ng-container matColumnDef="response"><th mat-header-cell *matHeaderCellDef>Resposta</th><td mat-cell *matCellDef="let n">{{n.responseText}}</td></ng-container>
+    <ng-container matColumnDef="children"><th mat-header-cell *matHeaderCellDef>Filhos</th><td mat-cell *matCellDef="let n">{{n.children?.length || 0}}</td></ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let n"><a mat-button color="primary" [routerLink]="[n.id]">Editar</a><button mat-button color="warn" (click)="remove(n.id)">Excluir</button></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
