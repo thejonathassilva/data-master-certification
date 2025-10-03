@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Config API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /predict:
+    post:
+      summary: Predição completa (assunto → intenção → NER → nó)
+      parameters:
+        - name: channel
+          in: query
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: { text: { type: string } }
+              required: [text]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subjectId: { type: string }
+                  intentId: { type: string }
+                  confidence: { type: number, format: float }
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        label: { type: string }
+                        value: { type: string }
+                        start: { type: integer }
+                        end: { type: integer }
+                        score: { type: number, format: float }
+                  node:
+                    type: object
+                    nullable: true
+  /simulate:
+    post:
+      summary: Simulação de conversa
+      parameters:
+        - name: channel
+          in: query
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text: { type: string }
+                sessionId: { type: string }
+              required: [text]
+      responses:
+        '200': { description: OK }
+  /preview/intent:
+    post:
+      summary: Prévia de confiança para uma nova/alterada intenção
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subjectId: { type: string }
+                intentDraft:
+                  type: object
+                  properties:
+                    name: { type: string }
+                    examples: { type: array, items: { type: string } }
+                  required: [name, examples]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deltaMetrics:
+                    type: object
+                    properties:
+                      intent_f1_before: { type: number }
+                      intent_f1_after: { type: number }
+                  sampleConfidence:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        text: { type: string }
+                        confidence: { type: number }
+                  topConfusions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        from: { type: string }
+                        to: { type: string }
+                        delta: { type: number }
+  /subjects/{id}/train:
+    post:
+      summary: Dispara job de treino do assunto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                versioningStrategy:
+                  type: string
+                  enum: [auto, increment]
+                  default: auto
+      responses:
+        '202': { description: Enfileirado }

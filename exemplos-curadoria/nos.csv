@@ -1,0 +1,6 @@
+﻿Subject,NodeName,ConditionType,ConditionValue,ResponseText,Actions,Children
+Abertura de Sinistro Auto,resposta_abrir_sinistro,intent,abrir_sinistro_colisao|abrir_sinistro_roubo,"Para abrir o sinistro, preciso do número da apólice, placa e data do evento. Deseja informar agora?",ask:policy_number|ask:plate|ask:date,
+Assistência 24h,resposta_guincho,intent,guincho,Acionando guincho. Confirme a localização atual e a placa do veículo.,ask:cep|ask:plate|create:assistance_ticket,
+2ª via de Boleto,resposta_segunda_via,intent,emitir_segunda_via,Enviarei o boleto atualizado para o seu e-mail cadastrado. Confirma o e-mail?,ask:email|trigger:issue_second_copy,
+Cobertura e Franquia,resposta_franquia,intent,valor_franquia,A franquia depende da sua apólice e cobertura. Informe o número da apólice para consultar.,ask:policy_number|lookup:franchise_value,
+Status de Sinistro,resposta_status,intent,acompanhar_sinistro,"Para consultar o status, me informe o número do sinistro (ex.: SIN-123456).",ask:claim_number|lookup:claim_status,

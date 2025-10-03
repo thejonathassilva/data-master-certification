@@ -1,0 +1,6 @@
+services:
+  config-api:
+    build:
+      args:
+        GITHUB_USER: ${GITHUB_USER}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}

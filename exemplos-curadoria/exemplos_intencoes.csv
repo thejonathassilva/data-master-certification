@@ -1,0 +1,109 @@
+﻿Subject,Intent,Example
+Abertura de Sinistro Auto,abrir_sinistro_colisao,Bati o carro e preciso abrir um sinistro
+Abertura de Sinistro Auto,abrir_sinistro_colisao,"Tive uma colisão, como faço para registrar o sinistro?"
+Abertura de Sinistro Auto,abrir_sinistro_colisao,"Sofri um acidente hoje, quero acionar o seguro"
+Abertura de Sinistro Auto,abrir_sinistro_colisao,Preciso abrir sinistro por batida agora
+Abertura de Sinistro Auto,abrir_sinistro_colisao,Como reporto um acidente de trânsito?
+Abertura de Sinistro Auto,abrir_sinistro_colisao,Quero iniciar um processo de sinistro por colisão
+Abertura de Sinistro Auto,abrir_sinistro_roubo,"Roubaram meu carro, preciso abrir sinistro"
+Abertura de Sinistro Auto,abrir_sinistro_roubo,"Fui vítima de roubo de veículo, como aciono o seguro?"
+Abertura de Sinistro Auto,abrir_sinistro_roubo,"Carro foi furtado, quero registrar sinistro"
+Abertura de Sinistro Auto,abrir_sinistro_roubo,Qual o passo para sinistro por roubo?
+Abertura de Sinistro Auto,abrir_sinistro_roubo,Acionamento de seguro por furto/roubo do veículo
+Abertura de Sinistro Auto,abrir_sinistro_roubo,Desejo abrir sinistro por roubo agora
+Abertura de Sinistro Auto,documentos_sinistro,Quais documentos preciso para o sinistro?
+Abertura de Sinistro Auto,documentos_sinistro,Documentação necessária para abrir sinistro
+Abertura de Sinistro Auto,documentos_sinistro,O que devo enviar para análise do sinistro?
+Abertura de Sinistro Auto,documentos_sinistro,Lista de documentos para sinistro
+Abertura de Sinistro Auto,documentos_sinistro,Preciso saber os documentos exigidos
+Abertura de Sinistro Auto,documentos_sinistro,Quais comprovantes preciso anexar?
+Assistência 24h,guincho,"Meu carro quebrou, preciso de guincho"
+Assistência 24h,guincho,Acione o reboque para mim
+Assistência 24h,guincho,"Carro não liga, quero solicitar guincho"
+Assistência 24h,guincho,Como peço guincho da assistência?
+Assistência 24h,guincho,Preciso remover o veículo até a oficina
+Assistência 24h,guincho,Chamar guincho agora
+Assistência 24h,chaveiro,"Perdi a chave do carro, tem chaveiro?"
+Assistência 24h,chaveiro,Tranquei a chave dentro do veículo
+Assistência 24h,chaveiro,Como aciono o serviço de chaveiro?
+Assistência 24h,chaveiro,Ajuda com chave do carro
+Assistência 24h,chaveiro,"Chave quebrou, preciso de chaveiro"
+Assistência 24h,chaveiro,Chaveiro 24h disponível?
+Assistência 24h,troca_pneu,"Furei o pneu, tem troca?"
+Assistência 24h,troca_pneu,Trocar pneu pelo seguro
+Assistência 24h,troca_pneu,Ajuda para trocar o pneu
+Assistência 24h,troca_pneu,"Pneu furou, precisa de assistência"
+Assistência 24h,troca_pneu,Como solicitar troca de pneu?
+Assistência 24h,troca_pneu,Serviço de troca de pneu
+2ª via de Boleto,emitir_segunda_via,Quero a segunda via do boleto
+2ª via de Boleto,emitir_segunda_via,Emitir 2ª via do meu boleto
+2ª via de Boleto,emitir_segunda_via,Preciso do boleto atualizado
+2ª via de Boleto,emitir_segunda_via,Como pego a 2ª via para pagamento?
+2ª via de Boleto,emitir_segunda_via,"Gerar novo boleto, vencido"
+2ª via de Boleto,emitir_segunda_via,Me envie o boleto novamente
+2ª via de Boleto,negociacao_pagamento,Consigo negociar o pagamento do seguro?
+2ª via de Boleto,negociacao_pagamento,Quero parcelar a fatura
+2ª via de Boleto,negociacao_pagamento,Tem desconto para quitar?
+2ª via de Boleto,negociacao_pagamento,Negociação de débito do seguro
+2ª via de Boleto,negociacao_pagamento,Renegociar minha parcela em atraso
+2ª via de Boleto,negociacao_pagamento,Opções de pagamento para regularizar
+Cobertura e Franquia,consultar_coberturas,Quais coberturas minha apólice possui?
+Cobertura e Franquia,consultar_coberturas,Meu seguro cobre perda total?
+Cobertura e Franquia,consultar_coberturas,Cobertura contra terceiros está incluída?
+Cobertura e Franquia,consultar_coberturas,O que está coberto no meu plano?
+Cobertura e Franquia,consultar_coberturas,Detalhes das coberturas contratadas
+Cobertura e Franquia,consultar_coberturas,Cobertura de vidros está ativa?
+Cobertura e Franquia,valor_franquia,Qual é o valor da franquia?
+Cobertura e Franquia,valor_franquia,Quanto pago de franquia numa batida?
+Cobertura e Franquia,valor_franquia,Franquia para reparo de para-choque
+Cobertura e Franquia,valor_franquia,Qual franquia da minha apólice?
+Cobertura e Franquia,valor_franquia,Como calcular a franquia na colisão?
+Cobertura e Franquia,valor_franquia,Quero saber minha franquia
+Status de Sinistro,acompanhar_sinistro,Quero saber o status do meu sinistro
+Status de Sinistro,acompanhar_sinistro,Em que fase está meu processo de sinistro?
+Status de Sinistro,acompanhar_sinistro,Status do sinistro número 123
+Status de Sinistro,acompanhar_sinistro,Meu sinistro já foi analisado?
+Status de Sinistro,acompanhar_sinistro,Consulta de andamento do sinistro
+Status de Sinistro,acompanhar_sinistro,Acompanhar o sinistro por número
+Status de Sinistro,prazo_reparo,Quanto tempo leva o reparo?
+Status de Sinistro,prazo_reparo,Prazo para consertar o carro do sinistro
+Status de Sinistro,prazo_reparo,Quando fico pronto o serviço?
+Status de Sinistro,prazo_reparo,Previsão de entrega do veículo
+Status de Sinistro,prazo_reparo,Tempo estimado de reparo
+Status de Sinistro,prazo_reparo,Qual o SLA do conserto?
+Dados Cadastrais,atualizar_endereco,Quero atualizar meu endereço
+Dados Cadastrais,atualizar_endereco,"Mudei de casa, como atualizo?"
+Dados Cadastrais,atualizar_endereco,Alterar endereço da apólice
+Dados Cadastrais,atualizar_endereco,Atualização de endereço cadastral
+Dados Cadastrais,atualizar_endereco,Trocar CEP e logradouro
+Dados Cadastrais,atualizar_endereco,Novo endereço para correspondência
+Dados Cadastrais,atualizar_contatos,Atualizar telefone e e-mail
+Dados Cadastrais,atualizar_contatos,"Alterei meu número, como informo?"
+Dados Cadastrais,atualizar_contatos,Quero mudar meu contato
+Dados Cadastrais,atualizar_contatos,Atualizar dados de contato
+Dados Cadastrais,atualizar_contatos,Inserir novo e-mail de contato
+Dados Cadastrais,atualizar_contatos,Trocar telefone celular
+Endosso de Apólice,inclusao_condutor,Quero incluir um condutor na apólice
+Endosso de Apólice,inclusao_condutor,Adicionar segundo motorista
+Endosso de Apólice,inclusao_condutor,Como faço inclusão de condutor?
+Endosso de Apólice,inclusao_condutor,Cadastro de novo condutor
+Endosso de Apólice,inclusao_condutor,Incluir motorista ocasional
+Endosso de Apólice,inclusao_condutor,Colocar outro condutor na apólice
+Endosso de Apólice,alteracao_veiculo,"Troquei de carro, como alterar na apólice?"
+Endosso de Apólice,alteracao_veiculo,Alterar veículo segurado
+Endosso de Apólice,alteracao_veiculo,Atualizar placa e modelo do veículo
+Endosso de Apólice,alteracao_veiculo,Como faço endosso por troca de veículo?
+Endosso de Apólice,alteracao_veiculo,Mudança de veículo na apólice
+Endosso de Apólice,alteracao_veiculo,Cadastrar novo veículo no seguro
+Cancelamento e Reembolso,cancelar_apolice,Quero cancelar minha apólice
+Cancelamento e Reembolso,cancelar_apolice,Como peço cancelamento do seguro?
+Cancelamento e Reembolso,cancelar_apolice,Encerrar o seguro atual
+Cancelamento e Reembolso,cancelar_apolice,Cancelar apólice por venda do carro
+Cancelamento e Reembolso,cancelar_apolice,Proceder com cancelamento agora
+Cancelamento e Reembolso,cancelar_apolice,Quero finalizar o contrato
+Cancelamento e Reembolso,reembolso_sinistro,Como solicito reembolso do sinistro?
+Cancelamento e Reembolso,reembolso_sinistro,Quero pedir reembolso de despesas
+Cancelamento e Reembolso,reembolso_sinistro,Reembolsar guincho que paguei
+Cancelamento e Reembolso,reembolso_sinistro,Solicitar reembolso de notas
+Cancelamento e Reembolso,reembolso_sinistro,Reembolso por despesas médicas
+Cancelamento e Reembolso,reembolso_sinistro,Reembolso de táxi durante o sinistro

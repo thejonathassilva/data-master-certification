@@ -1,0 +1,293 @@
+services:  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "cub zk-ready localhost 2181 20 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [stack]
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on: [zookeeper]
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"   # mantém simples na POC
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "kafka-broker-api-versions --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [stack]
+
+  # cria tópicos usados pelo trainer (idempotente)
+  kafka-init:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/bin/bash","-lc"]
+    command: |
+      set -e
+      echo "Esperando broker kafka:9092 responder..."
+      for i in {1..30}; do
+        if kafka-topics --bootstrap-server kafka:9092 --list >/dev/null 2>&1; then
+          echo "Broker OK."
+          break
+        fi
+        echo "Tentativa $$i/30: aguardando broker..."
+        sleep 2
+      done
+
+      echo "Criando tópicos (idempotente)..."
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic train.requests --partitions 1 --replication-factor 1 || true
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic train.status   --partitions 1 --replication-factor 1 || true
+
+      echo "Tópicos prontos."
+      sleep 1
+    networks: [stack]
+
+  mongo:
+    image: mongo:7
+    ports: ["27018:27017"]
+    volumes:
+      - mongo_data:/data/db
+      # - ./seed:/seed:ro   # (opcional) monte seus seeds aqui
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [stack]
+
+  # UI opcional do Mongo
+  # mongo-express:
+  #   image: mongo-express:1.0.2
+  #   depends_on: [mongo]
+  #   environment:
+  #     ME_CONFIG_MONGODB_SERVER: mongo
+  #     ME_CONFIG_MONGODB_PORT: 27017
+  #   ports: ["8081:8081"]
+  #   networks: [stack]
+
+  minio:
+    image: minio/minio:RELEASE.2024-06-13T22-53-53Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001
+      MINIO_SERVER_URL: http://localhost:9000
+    ports: ["9000:9000","9001:9001"]
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks: [stack]
+
+  # cria bucket nlp-models (idempotente)
+  minio-init:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: ["/bin/sh","-lc"]
+    command: |
+      set -e
+      echo "Aguardando MinIO (http://minio:9000)..."
+      for i in $(seq 1 60); do
+        if mc alias set local http://minio:9000 "${MINIO_ROOT_USER}" "${MINIO_ROOT_PASSWORD}" >/dev/null 2>&1; then
+          echo "MinIO OK."
+          break
+        fi
+        echo "Tentativa $$i/60..."
+        sleep 2
+      done
+      echo "Criando bucket (idempotente)..."
+      mc mb -p local/nlp-models || true
+      echo "Bucket nlp-models ok"
+      sleep 1
+    networks: [stack]
+
+  predict-api:
+    build: ./predictor-nlp-api
+    env_file: ./predictor-nlp-api/.env
+    ports: ["8000:8000"]
+    depends_on:
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://predict-api:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [stack]
+  j-assistant-predict-api:
+    build: ./predictor-stick
+    env_file: ./predictor-stick/.env
+    ports: ["8001:8001"]
+    depends_on:
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://j-assistant-predict-api:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [stack]
+
+  trainer-worker:
+    build: ./trainer-worker-nlp
+    env_file: ./trainer-worker-nlp/.env
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks: [stack]
+
+  training-pipeline:
+    build: ./training-pipeline
+    env_file: ./training-pipeline/.env
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    networks: [stack]
+
+  config-api:
+    build: ./config-api
+    ports: ["8080:8080"]
+    env_file:
+      - ./config-api/.env
+    depends_on:
+      predict-api:
+        condition: service_started
+      kafka:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bash", "-lc", "curl -fsS http://localhost:8080/actuator/health || curl -fsS http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [stack]
+
+  front:
+    build:
+      context: ./banca-ia-front
+      dockerfile: Dockerfile
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    command: sh -c "npm install && npm run start -- --host 0.0.0.0 --port 4200"
+    ports: ["4200:4200"]
+    volumes:
+      - ./banca-ia-front:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      config-api:
+        condition: service_healthy
+    networks: [stack]
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    depends_on:
+      - config-api
+      - predict-api
+      - kafka
+      - mongo
+      - minio
+    networks: [stack]
+
+  pushgateway:
+    image: prom/pushgateway:v1.8.0
+    container_name: pushgateway
+    restart: unless-stopped
+    ports:
+      - "9091:9091"
+    networks: [stack]
+
+  # Kafka Exporter (usa imagem canônica)
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.7.0
+    container_name: kafka-exporter
+    restart: unless-stopped
+    command:
+      - --kafka.server=kafka:9092
+    ports:
+      - "9308:9308"
+    depends_on:
+      - kafka
+    networks: [stack]
+
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.43.0
+    container_name: mongodb-exporter
+    restart: unless-stopped
+    command:
+      - --mongodb.uri=mongodb://mongo:27017
+    ports:
+      - "9216:9216"
+    depends_on:
+      - mongo 
+    networks: [stack]
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_DOMAIN: localhost
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks: [stack]
+
+networks:
+  stack:
+
+volumes:
+  mongo_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:

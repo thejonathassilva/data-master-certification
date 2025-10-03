@@ -1,0 +1,80 @@
+{
+  "id": null,
+  "uid": "banca-ia-overview",
+  "title": "banca-ia • Overview",
+  "timezone": "browser",
+  "version": 1,
+  "schemaVersion": 39,
+  "editable": true,
+  "style": "dark",
+  "tags": ["banca-ia", "observability"],
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Config-API - Predict • Requests (total)",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "sum by (job) (http_requests_total{job=\"config-api\"})", "legendFormat": "{{job}}" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Config-API • Requests (count)",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        { "expr": "sum by (uri) (http_server_requests_seconds_count{job=\"config-api\"})", "legendFormat": "{{uri}}" }
+      ]
+    },
+    {
+      "type": "gauge",
+      "title": "Trainer • Último status (1=READY 0=FAILED)",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "fieldConfig": { "defaults": { "min": 0, "max": 1 } },
+      "targets": [
+        { "expr": "max by (engine,scope) (trainer_status)", "legendFormat": "{{engine}}/{{scope}}" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Trainer • Duração (s) (último job)",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "targets": [
+        { "expr": "max by (engine,scope) (trainer_duration_seconds)", "legendFormat": "{{engine}}/{{scope}}" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Kafka • Consumer Lag (por grupo)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "targets": [
+        { "expr": "sum by (consumergroup) (kafka_consumergroup_lag)", "legendFormat": "{{consumergroup}}" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "UP • Prometheus targets",
+      "gridPos": { "h": 8, "w": 4, "x": 12, "y": 6 },
+      "targets": [
+        { "expr": "sum(up)", "legendFormat": "up" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "UP • MinIO",
+      "gridPos": { "h": 8, "w": 4, "x": 16, "y": 6 },
+      "targets": [
+        { "expr": "max(up{job=\"minio\"})", "legendFormat": "minio up" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "UP • Mongo Exporter",
+      "gridPos": { "h": 8, "w": 4, "x": 20, "y": 6 },
+      "targets": [
+        { "expr": "max(up{job=\"mongodb-exporter\"})", "legendFormat": "mongo up" }
+      ]
+    }
+  ],
+  "templating": { "list": [] }
+}
