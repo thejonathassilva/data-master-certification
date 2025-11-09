@@ -1,0 +1,27 @@
+server:
+  http_listen_port: 9080
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: config-api-audit
+    static_configs:
+      - targets: [localhost]
+        labels:
+          job: config-api-audit
+          app: config-api
+          __path__: /var/log/app/app.log
+    pipeline_stages:
+      - json:                 # nosso log já é JSON em message
+          expressions:
+            ts: ts
+            path: path
+            method: method
+            channel: channel
+            status: status
+            duration_ms: duration_ms
+            request_text: request_text
+            response_text: response_text

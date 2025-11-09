@@ -195,6 +195,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
+    volumes:
+      - app_logs:/var/log/app
     networks: [stack]
 
   front:
@@ -224,7 +226,6 @@ services:
       - prometheus_data:/prometheus
     depends_on:
       - config-api
-      - predict-api
       - kafka
       - mongo
       - minio
@@ -263,7 +264,21 @@ services:
     depends_on:
       - mongo 
     networks: [stack]
-
+  loki:
+    image: grafana/loki:2.9.4
+    ports: ["3100:3100"]
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./observability/loki/local-config.yaml:/etc/loki/local-config.yaml:ro
+    networks: [stack]
+  promtail:
+    image: grafana/promtail:2.9.4
+    command: -config.file=/etc/promtail/config.yml
+    volumes:
+      - app_logs:/var/log/app:ro           # lê os logs do app
+      - ./observability/promtail/config.yml:/etc/promtail/config.yml:ro
+    depends_on: [loki]
+    networks: [stack]
   grafana:
     image: grafana/grafana:10.2.3
     container_name: grafana
@@ -291,3 +306,4 @@ volumes:
   minio_data:
   prometheus_data:
   grafana_data:
+  app_logs:

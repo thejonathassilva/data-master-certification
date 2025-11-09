@@ -4,6 +4,7 @@ import com.config.api.ia_backend.dto.PredictRequest;
 import com.config.api.ia_backend.dto.PredictionResponse;
 import com.config.api.ia_backend.service.JAssistantPredictionService;
 import com.config.api.ia_backend.service.PredictionService;
+import io.micrometer.core.annotation.Timed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -4,7 +4,7 @@ from pydantic import Field, AliasChoices
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
-        extra="ignore",           # não erro com chaves desconhecidas
+        extra="ignore",
     )
 
     kafka_bootstrap_servers: str = Field(

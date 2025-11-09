@@ -1,0 +1,27 @@
+<configuration>
+    <property name="APP_LOG" value="/var/log/app/app.log"/>
+
+    <appender name="APP_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${APP_LOG}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/log/app/app.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <loggerName/>
+                <threadName/>
+                <message/>  <!-- nossa string JSON -->
+            </providers>
+        </encoder>
+    </appender>
+
+    <logger name="predict_audit" level="INFO" additivity="false">
+        <appender-ref ref="APP_JSON"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="APP_JSON"/>
+    </root>
+</configuration>
