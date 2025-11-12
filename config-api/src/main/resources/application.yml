@@ -36,3 +36,22 @@ management:
   metrics:
     tags:
       application: config-api
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      predictService:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 3                # últimas 2 chamadas
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 50             # abre se >= 50% falhar
+        slow-call-duration-threshold: 10s       # chamadas lentas contam como falha lenta
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30       # quanto tempo fica aberto
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        record-exceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.client.ResourceAccessException
+        ignore-exceptions:

@@ -26,12 +26,6 @@ class MinioStorageService:
     
     @staticmethod
     def _parse_s3_uri(s3_uri: str) -> Tuple[str, str]:
-        """
-        Aceita formatos:
-          - s3://bucket/obj/path.pkl
-          - (fallback) 'obj/path.pkl' → bucket será resolvido fora
-        Retorna: (bucket, object_name)
-        """
         if s3_uri.startswith("s3://"):
             p = urlparse(s3_uri)
             bucket = p.netloc
@@ -46,10 +40,6 @@ class MinioStorageService:
         return pickle.loads(data)
     
     def load_from_minio_url(self, minio_url: str) -> Any:
-        """
-        Carrega (pickle.loads) a partir de uma URL estilo 's3://bucket/subject/component.pkl'.
-        Útil quando você leu a referência direto do Mongo.
-        """
         bucket, object_name = self._parse_s3_uri(minio_url)
         if not bucket:
             bucket = self.bucket
