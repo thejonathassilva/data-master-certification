@@ -46,11 +46,11 @@ public class PredictionController {
     private PredictionResponse predictFallback(String channel,
                                                PredictRequest req,
                                                String ia,
-                                               Throwable t,
-                                               String uuid) {
+                                               Throwable t) {
+        UUID uuid = UUID.randomUUID();
         var res = jAssistantService.predict(channel, req);
         log.info("[FINAL-ANSWER] REQ={} | CANAL={} | UUID={} | RESPOSTA={} | INTENT={} | CONFIDENCE={} | IA={}",
-                req.text(), channel, uuid, res.node(), res.intentId(), res.confidence(), ia);
+                req.text(), channel, uuid, res.node(), res.intentId(), res.confidence(), "Fallback-J_Assistant");
         return res;
     }
 }
